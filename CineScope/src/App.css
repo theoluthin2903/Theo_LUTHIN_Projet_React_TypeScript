@@ -1,0 +1,27 @@
+.app-shell { min-height: 100svh; }
+.site-nav { display: flex; align-items: center; gap: 28px; padding: 28px 0; border-bottom: 1px solid var(--border); }
+.brand { margin-right: auto; color: var(--text-h); font: 700 24px var(--heading); letter-spacing: 1px; }
+.site-nav a { color: var(--muted); text-decoration: none; transition: color 180ms ease; }
+.site-nav a:hover, .site-nav a:focus-visible { color: var(--accent); }
+.hero-copy { padding: 76px 0 42px; }
+.eyebrow { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+.hero-copy h1 { max-width: 680px; margin: 12px 0; font-size: clamp(42px, 7vw, 76px); line-height: .98; }
+.hero-copy p { max-width: 540px; color: var(--muted); }
+.search-bar { margin-bottom: 48px; }
+.search-bar input { width: 100%; box-sizing: border-box; padding: 17px 20px; color: var(--text-h); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; outline: none; transition: border-color 180ms ease, box-shadow 180ms ease; }
+.search-bar input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.movie-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; padding-bottom: 72px; }
+.movie-card { min-height: 160px; padding: 26px; box-sizing: border-box; background: linear-gradient(145deg, var(--surface-raised), var(--surface)); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); transition: transform 180ms ease, border-color 180ms ease; }
+.movie-card:hover { transform: translateY(-5px); border-color: rgba(242, 184, 75, .55); }
+.movie-card h2 { margin-bottom: 20px; font-size: 26px; }
+.movie-card p { color: var(--muted); font-size: 14px; }
+.movie-card p:last-child { margin-top: 6px; color: var(--accent); }
+.movie-card img { width: 100%; height: auto; border-radius: 8px; margin-bottom: 12px; }
+footer { padding: 24px 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+@media (max-width: 700px) {
+  #root { padding: 0 20px; }
+  .site-nav { gap: 16px; flex-wrap: wrap; }
+  .brand { width: 100%; }
+  .hero-copy { padding-top: 56px; }
+  .movie-grid { grid-template-columns: 1fr; }
+}
