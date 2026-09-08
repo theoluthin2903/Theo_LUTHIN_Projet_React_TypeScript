@@ -1,22 +1,24 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "../components/Footer";
-import MovieGrid from "./components/MovieGrid";
-import SearchBar from "./components/SearchBar";
+import Favorites from "./pages/Favorites";
+import Home from "./pages/Home";
+import Movies from "./pages/Movies";
 import "./App.css";
 
 function App() {
 	return (
-		<main className="app-shell">
-			<Navbar />
-			<section className="hero-copy">
-				<span className="eyebrow">Votre sélection du moment</span>
-				<h1>Le cinéma, autrement.</h1>
-				<p>Explorez les films du moment.</p>
-			</section>
-			<SearchBar />
-			<MovieGrid />
-			<Footer />
-		</main>
+		<BrowserRouter>
+			<main className="app-shell">
+				<Navbar />
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/movies" element={<Movies />} />
+					<Route path="/favorites" element={<Favorites />} />
+				</Routes>
+				<Footer />
+			</main>
+		</BrowserRouter>
 	);
 }
 export default App;

@@ -16,9 +16,11 @@ return (
 <h2>{title}</h2>
 <p>{genres.join(", ")}</p>
 <p>{year}</p>
-<p>Note: ⭐{note}/10</p>
-<p>Durée: {duree} minutes</p>
+<p>Note : ⭐{note}/10</p>
+<p>Durée : {duree} minutes</p>
 <p>{description}</p>
+<button className="favorite-button">Ajouter aux favoris</button>
+<button className="movie-infos-button">Voir le film </button>
 </article>
 );
 }

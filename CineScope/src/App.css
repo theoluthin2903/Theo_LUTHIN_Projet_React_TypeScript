@@ -17,6 +17,9 @@
 .movie-card p { color: var(--muted); font-size: 14px; }
 .movie-card p:last-child { margin-top: 6px; color: var(--accent); }
 .movie-card img { width: 100%; height: auto; border-radius: 8px; margin-bottom: 12px; }
+.movie-card button { display: inline-block; margin-top: 10px; padding: 8px 12px; background-color: rgba(74, 222, 128, .14); color: #4ade80; border: 1px solid rgba(74, 222, 128, .4); border-radius: 6px; cursor: pointer; white-space: nowrap; transition: background-color 180ms ease, border-color 180ms ease; }
+.movie-card button + button { margin-left: 10px; }
+.movie-card button:hover { background-color: rgba(74, 222, 128, .24); border-color: rgba(74, 222, 128, .7); }
 footer { padding: 24px 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
 @media (max-width: 700px) {
   #root { padding: 0 20px; }
