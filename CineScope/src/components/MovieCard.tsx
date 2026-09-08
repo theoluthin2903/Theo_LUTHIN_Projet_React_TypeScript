@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 interface MovieCardProps {
     id: number;
     title: string;
@@ -9,7 +11,7 @@ interface MovieCardProps {
     imagePath: string;
 
 }
-function MovieCard({title, genres, year, note, duree, description, imagePath }: MovieCardProps) {
+function MovieCard({id, title, genres, year, note, duree, description, imagePath }: MovieCardProps) {
 return (
 <article className="movie-card">
 <img src={imagePath} alt={title} />
@@ -19,8 +21,12 @@ return (
 <p>Note : ⭐{note}/10</p>
 <p>Durée : {duree} minutes</p>
 <p>{description}</p>
-<button className="favorite-button">Ajouter aux favoris</button>
-<button className="movie-infos-button">Voir le film </button>
+<div className="movie-card-actions">
+  <Link to={`/movie/${id}`} className="movie-infos-button">
+    Voir le film
+  </Link>
+  <button className="favorite-button">Ajouter aux favoris</button>
+</div>
 </article>
 );
 }
