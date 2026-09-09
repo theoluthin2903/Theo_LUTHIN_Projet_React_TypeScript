@@ -5,6 +5,8 @@ import Favorites from "./pages/Favorites";
 import Home from "./pages/Home";
 import Movies from "./pages/Movies";
 import Movie from "./pages/Movie";
+import Library from "./pages/Library"
+import Profile from "./pages/Profile"
 import "./App.css";
 
 function AppShell() {
@@ -19,6 +21,8 @@ function AppShell() {
 				<Route path="/movies" element={<Movies />} />
 				<Route path="/movie/:id" element={<Movie />} />
 				<Route path="/favorites" element={<Favorites />} />
+				<Route path="/library" element={<Library />} />
+				<Route path="/profile" element={<Profile />} />
 			</Routes>
 			<Footer />
 		</main>	

@@ -25,3 +25,4 @@ h1, h2 { font-family: var(--heading); font-weight: 400; color: var(--text-h); }
 h2 { margin: 0; }
 p { margin: 0; }
 button, input { font: inherit; }
+

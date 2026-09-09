@@ -2,8 +2,8 @@ function Favorites() {
   return (
     <section className="hero-copy">
       <span className="eyebrow">Ma sélection</span>
-      <h1>Favoris</h1>
-      <p>Les films que vous avez ajoutés à vos favoris apparaîtront ici.</p>
+      <h1>Mes Favoris</h1>
+      <p>Ajoutez des films à vos favoris pour les retrouver ici</p>
     </section>
   );
 }
