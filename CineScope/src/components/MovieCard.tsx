@@ -8,19 +8,21 @@ interface MovieCardProps {
     genres: string[];
     duree: number;
     description: string;
+    realisateur: string[]
     imagePath: string;
 
 }
-function MovieCard({id, title, genres, year, note, duree, description, imagePath }: MovieCardProps) {
+function MovieCard({id, title, genres, year, note, duree, description, realisateur, imagePath }: MovieCardProps) {
 return (
 <article className="movie-card">
 <img src={imagePath} alt={title} />
 <h2>{title}</h2>
+<p>De {realisateur.join(" et ")}</p>
 <p>{genres.join(", ")}</p>
 <p>{year}</p>
 <p>Note : ⭐{note}/10</p>
 <p>Durée : {duree} minutes</p>
-<p>{description}</p>
+<p dangerouslySetInnerHTML={{ __html: description }} />
 <div className="movie-card-actions">
   <Link to={`/movie/${id}`} className="movie-infos-button">
     Voir le film

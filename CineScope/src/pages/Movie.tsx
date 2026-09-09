@@ -22,6 +22,7 @@ function Movie() {
         <div className="movie-detail__content">
           <p className="movie-detail__genres">{movie.genres.join(" • ")}</p>
           <h1>{movie.title}</h1>
+          <p> De {movie.realisateur.join(" et ")} </p>
           <p className="movie-detail__meta">
             {movie.year} • {movie.duree} min • ⭐ {movie.note}/10
           </p>
@@ -34,7 +35,7 @@ function Movie() {
           <div className="movie-detail__info">
             <div>
               <h2>Synopsis</h2>
-              <p>{movie.synopsis}</p>
+              <p dangerouslySetInnerHTML={{ __html: movie.synopsis }} />
             </div>
 
             <div>
