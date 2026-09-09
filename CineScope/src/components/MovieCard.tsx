@@ -21,7 +21,7 @@ return (
 <p>{genres.join(", ")}</p>
 <p>{year}</p>
 <p>Note : ⭐{note}/10</p>
-<p>Durée : {duree} minutes</p>
+<p>Durée : {Math.trunc(duree / 60)}h {duree % 60}min</p>
 <p dangerouslySetInnerHTML={{ __html: description }} />
 <div className="movie-card-actions">
   <Link to={`/movie/${id}`} className="movie-infos-button">

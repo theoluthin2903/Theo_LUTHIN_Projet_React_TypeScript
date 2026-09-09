@@ -24,7 +24,7 @@ function Movie() {
           <h1>{movie.title}</h1>
           <p> De {movie.realisateur.join(" et ")} </p>
           <p className="movie-detail__meta">
-            {movie.year} • {movie.duree} min • ⭐ {movie.note}/10
+            {movie.year} • {Math.trunc(movie.duree / 60)}h {movie.duree % 60}min • ⭐ {movie.note}/10
           </p>
 
           <div className="movie-detail__actions">
