@@ -21,7 +21,7 @@ function AppShell() {
 				<Route path="/favorites" element={<Favorites />} />
 			</Routes>
 			<Footer />
-		</main>
+		</main>	
 	);
 }
 
