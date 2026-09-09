@@ -3,7 +3,12 @@ import MovieGrid from "../components/MovieGrid";
 import SearchBar from "../components/SearchBar";
 import { movies } from "../data/movies";
 
-function Movies() {
+interface MoviesProps {
+  favorites: number[];
+  onToggleFavorite: (movieId: number) => void;
+}
+
+function Movies({ favorites, onToggleFavorite }: MoviesProps) {
   const [search, setSearch] = useState("");
   const filteredMovies = movies.filter((movie) =>
     movie.title.toLowerCase().includes(search.toLowerCase()),
@@ -17,7 +22,11 @@ function Movies() {
         <p>Retrouvez tous les films disponibles sur CineScope.</p>
         <SearchBar search={search} onSearchChange={setSearch} />
       </section>
-      <MovieGrid movies={filteredMovies} />
+      <MovieGrid
+        movies={filteredMovies}
+        favorites={favorites}
+        onToggleFavorite={onToggleFavorite}
+      />
     </section>
   );
 }

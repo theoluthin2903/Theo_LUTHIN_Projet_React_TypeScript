@@ -1,7 +1,12 @@
 import { Link, useParams } from "react-router-dom";
 import { movies } from "../data/movies";
 
-function Movie() {
+interface MovieProps {
+  favorites: number[];
+  onToggleFavorite: (movieId: number) => void;
+}
+
+function Movie({ favorites, onToggleFavorite }: MovieProps) {
   const { id } = useParams<{ id: string }>();
   const movie = movies.find((item) => item.id === Number(id));
 
@@ -13,6 +18,8 @@ function Movie() {
       </section>
     );
   }
+
+  const isFavorite = favorites.includes(movie.id);
 
   return (
     <section className="movie-detail">
@@ -28,7 +35,13 @@ function Movie() {
           </p>
 
           <div className="movie-detail__actions">
-            <button type="button" className="favorite-button">Ajouter aux favoris</button>
+            <button
+              type="button"
+              className="favorite-button"
+              onClick={() => onToggleFavorite(movie.id)}
+            >
+              {isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+            </button>
             <Link to="/movies" className="movie-infos-button">Retour aux films</Link>
           </div>
 
