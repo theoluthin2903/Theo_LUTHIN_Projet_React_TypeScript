@@ -30,7 +30,7 @@ function MovieCard({
   return (
     <article className="movie-card">
       <img src={imagePath} alt={title} />
-      <h2>{title}</h2>
+      <h2 className="movie-card__title">{title}</h2>
       <p>De {realisateur.join(" et ")}</p>
       <p>{genres.join(", ")}</p>
       <p>{year}</p>
