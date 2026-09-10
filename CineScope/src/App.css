@@ -4,6 +4,7 @@
 .nav-links { display: flex; align-items: center; justify-content: center; gap: 28px; flex: 1; min-width: 0; }
 .site-nav a { color: var(--muted); text-decoration: none; transition: color 180ms ease; }
 .site-nav a:hover, .site-nav a:focus-visible { color: var(--accent); }
+.site-nav a.nav-link.active { color: #4ade80; font-weight: 700; }
 .hero-copy { padding: 76px 0 42px; }
 .eyebrow { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
 .hero-copy h1 { max-width: 680px; margin: 12px 0; font-size: clamp(42px, 7vw, 76px); line-height: .98; }
