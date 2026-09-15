@@ -31,7 +31,7 @@
 .movie-card p:last-child { margin-top: 6px; color: var(--accent); }
 .movie-card img { width: 100%; height: auto; border-radius: 8px; margin-bottom: 12px; }
 .movie-card-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
-.favorite-button, .movie-infos-button, .movie-library-button {
+.favorite-button, .movie-infos-button, .movie-library-button, .go-to-films-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;

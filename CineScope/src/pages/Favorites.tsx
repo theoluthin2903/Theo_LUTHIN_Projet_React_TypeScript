@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import MovieGrid from "../components/MovieGrid";
 import { fetchMovieDetails } from "../services/tmdb";
 import type { Movie } from "../types/movie";
@@ -29,7 +30,12 @@ function Favorites({ favorites, onToggleFavorite }: FavoritesProps) {
         <h2>Films favoris ({favoriteMovies.length}) :</h2>
 
         {favoriteMovies.length === 0 ? (
-          <p>Vous n'avez encore aucun film favori.</p>
+          <>
+            <p>Vous n'avez encore aucun film favori.</p>
+            <Link to="/movies" className="go-to-films-button">
+              Découvrir les films
+            </Link>
+          </>
         ) : (
           <MovieGrid
             movies={favoriteMovies}
