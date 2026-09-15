@@ -5,7 +5,7 @@ import type { Movie } from "../types/movie";
 
 interface FavoritesProps {
   favorites: number[];
-  onToggleFavorite: (movieId: number) => void;
+  onToggleFavorite: (movieId: number, movieTitle: string) => void;
 }
 
 function Favorites({ favorites, onToggleFavorite }: FavoritesProps) {

@@ -5,7 +5,7 @@ import type { Movie as MovieType } from "../types/movie";
 
 interface MovieProps {
   favorites: number[];
-  onToggleFavorite: (movieId: number) => void;
+  onToggleFavorite: (movieId: number, movieTitle: string) => void;
 }
 
 function Movie({ favorites, onToggleFavorite }: MovieProps) {
@@ -55,7 +55,7 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
             <button
               type="button"
               className="favorite-button"
-              onClick={() => onToggleFavorite(movie.id)}
+              onClick={() => onToggleFavorite(movie.id, movie.title)}
             >
               {isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
             </button>

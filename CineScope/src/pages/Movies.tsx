@@ -5,7 +5,7 @@ import type { Movie } from "../types/movie";
 
 interface MoviesProps {
   favorites: number[];
-  onToggleFavorite: (movieId: number) => void;
+  onToggleFavorite: (movieId: number, movieTitle: string) => void;
 }
 
 function Movies({ favorites, onToggleFavorite }: MoviesProps) {
@@ -43,7 +43,7 @@ function Movies({ favorites, onToggleFavorite }: MoviesProps) {
         <p>Retrouvez tous les films disponibles sur CineScope.</p>
       </section>
       {loading && <p role="status">Chargement des films...</p>}
-      {error && <p role="alert">{error} Une erreur est survenue lors de la récupération des données.</p>}
+      {error && <p role="alert">{error} Une erreur est survenue lors de la récupération des données. Veuillez réessayer.</p>}
       {!loading && !error && <MovieGrid movies={movies} favorites={favorites} onToggleFavorite={onToggleFavorite} />}
       {!loading && !error && <div className="pagination">
         <button type="button" disabled={page === 1} onClick={() => setPage((current) => current - 1)}>Page précédente</button>

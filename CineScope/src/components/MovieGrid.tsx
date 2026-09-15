@@ -4,7 +4,7 @@ import type { Movie } from "../types/movie";
 interface MovieGridProps {
   movies: Movie[];
   favorites: number[];
-  onToggleFavorite: (movieId: number) => void;
+  onToggleFavorite: (movieId: number, movieTitle: string) => void;
 }
 
 function MovieGrid({ movies, favorites, onToggleFavorite }: MovieGridProps) {

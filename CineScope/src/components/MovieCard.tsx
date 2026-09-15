@@ -3,7 +3,7 @@ import type { Movie } from "../types/movie";
 
 interface MovieCardProps extends Movie {
   isFavorite: boolean;
-  onToggleFavorite: (movieId: number) => void;
+  onToggleFavorite: (movieId: number, movieTitle: string) => void;
 }
 
 function MovieCard({
@@ -12,9 +12,7 @@ function MovieCard({
   genres,
   year,
   note,
-  duree,
   description,
-  realisateur,
   imagePath,
   isFavorite,
   onToggleFavorite,
@@ -23,11 +21,9 @@ function MovieCard({
     <article className="movie-card">
       {imagePath ? <img src={imagePath} alt={title} /> : <div className="movie-card__poster-placeholder">Affiche indisponible</div>}
       <h2 className="movie-card__title">{title}</h2>
-      <p>De {realisateur.join(" et ")}</p>
       <p>{genres.join(", ")}</p>
       <p>{year}</p>
-      <p>Note : ⭐{note}/10</p>
-      <p>Durée : {Math.trunc(duree / 60)}h {duree % 60}min</p>
+      <p>Note : ⭐{note.toFixed(1)}/10</p>
       <p dangerouslySetInnerHTML={{ __html: description }} />
       <div className="movie-card-actions">
         <Link to={`/movie/${id}`} className="movie-infos-button">
@@ -36,7 +32,7 @@ function MovieCard({
         <button
           type="button"
           className="favorite-button"
-          onClick={() => onToggleFavorite(id)}
+          onClick={() => onToggleFavorite(id, title)}
         >
           {isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
         </button>

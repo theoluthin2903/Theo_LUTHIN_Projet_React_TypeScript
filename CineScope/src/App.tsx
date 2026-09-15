@@ -9,6 +9,7 @@ import Movie from "./pages/Movie";
 import Library from "./pages/Library";
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
+import NotFound from "./pages/NotFound";
 import "./App.css";
 
 function AppShell() {
@@ -36,7 +37,7 @@ function AppShell() {
 		return () => window.clearTimeout(timeoutId);
 	}, [toastMessage]);
 
-	const toggleFavorite = (movieId: number) => {
+	const toggleFavorite = (movieId: number, movieTitle: string) => {
 		const isFavorite = favorites.includes(movieId);
 
 		setFavorites((prev) =>
@@ -45,7 +46,11 @@ function AppShell() {
 				: [...prev, movieId]
 		);
 
-		setToastMessage(isFavorite ? "Film retiré des favoris." : "Film ajouté aux favoris.");
+		setToastMessage(
+			isFavorite
+				? `${movieTitle} retiré des favoris.`
+				: `${movieTitle} ajouté aux favoris.`
+		);
 	};
 
 	return (
@@ -64,6 +69,7 @@ function AppShell() {
 				<Route path="/library" element={<Library />} />
 				<Route path="/profile" element={<Profile />} />
 				<Route path="/search" element={<Search favorites={favorites} onToggleFavorite={toggleFavorite} />} />
+				<Route path="*" element={<NotFound />} />
 			</Routes>
 			<Footer />
 		</main>
@@ -78,4 +84,3 @@ function App() {
 	);
 }
 export default App;
-
