@@ -6,7 +6,8 @@ import Favorites from "./pages/Favorites";
 import Home from "./pages/Home";
 import Movies from "./pages/Movies";
 import Movie from "./pages/Movie";
-import Library from "./pages/Library";
+import { LibraryPage } from "./pages/Library";
+import { LibraryProvider } from './context/LibraryContext';
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
 import NotFound from "./pages/NotFound";
@@ -61,16 +62,18 @@ function AppShell() {
 					{toastMessage}
 				</div>
 			)}
+			<LibraryProvider>
 			<Routes>
 				<Route path="/" element={<Home favorites={favorites} onToggleFavorite={toggleFavorite} />} />
 				<Route path="/movies" element={<Movies favorites={favorites} onToggleFavorite={toggleFavorite} />} />
 				<Route path="/movie/:id" element={<Movie favorites={favorites} onToggleFavorite={toggleFavorite} />} />
 				<Route path="/favorites" element={<Favorites favorites={favorites} onToggleFavorite={toggleFavorite} />} />
-				<Route path="/library" element={<Library />} />
+				<Route path="/library" element={<LibraryPage />} />
 				<Route path="/profile" element={<Profile />} />
 				<Route path="/search" element={<Search favorites={favorites} onToggleFavorite={toggleFavorite} />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
+			</LibraryProvider>
 			<Footer />
 		</main>
 	);

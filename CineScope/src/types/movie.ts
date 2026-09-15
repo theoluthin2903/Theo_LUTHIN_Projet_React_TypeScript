@@ -1,3 +1,5 @@
+export type WatchStatus = 'to_watch' | 'in_progress' | 'watched';
+
 export interface Movie {
   id: number;
   title: string;
@@ -13,4 +15,5 @@ export interface Movie {
   voteCount: number;
   originalLanguage: string;
   productionCountries: string[];
+  status?: WatchStatus;
 }
