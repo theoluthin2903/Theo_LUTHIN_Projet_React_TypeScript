@@ -52,7 +52,7 @@ export function MovieCard(props: MovieCardProps) {
       {description && <p dangerouslySetInnerHTML={{ __html: description }} />}
 
       {/* Sélecteur de statut de la bibliothèque */}
-      <div className="movie-card__library-status mt-2">
+      <div className="movie-card__library-status">
         <select
           value={currentStatus || ""}
           onChange={handleStatusChange}
@@ -70,7 +70,7 @@ export function MovieCard(props: MovieCardProps) {
           <button
             type="button"
             onClick={() => removeFromLibrary(id)}
-            className="movie-card__remove-button text-xs text-red-500 hover:underline block mt-1"
+            className="movie-card__remove-button"
           >
             Retirer de la bibliothèque
           </button>

@@ -31,7 +31,7 @@
 .movie-card p:last-child { margin-top: 6px; color: var(--accent); }
 .movie-card img { width: 100%; height: auto; border-radius: 8px; margin-bottom: 12px; }
 .movie-card-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
-.favorite-button, .movie-infos-button {
+.favorite-button, .movie-infos-button, .movie-library-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -46,7 +46,7 @@
   text-decoration: none;
   font: inherit;
 }
-.favorite-button:hover, .movie-infos-button:hover { background-color: rgba(74, 222, 128, .24); border-color: rgba(74, 222, 128, .7); }
+.favorite-button:hover, .movie-infos-button:hover, .movie-library-button:hover { background-color: rgba(74, 222, 128, .24); border-color: rgba(74, 222, 128, .7); }
 .movie-detail { padding: 48px 0 72px; }
 .movie-detail--empty { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
 .movie-detail__hero { display: grid; grid-template-columns: minmax(240px, 360px) minmax(0, 1fr); gap: 32px; align-items: start; }
@@ -73,6 +73,45 @@
 .movie-detail__info p { margin: 0; color: var(--muted); line-height: 1.6; }
 .movie-detail__cast { display: flex; flex-direction: column; gap: 8px; margin: 0; padding-left: 18px; color: var(--muted); }
 footer { display: flex; align-items: center; justify-content: center; padding: 24px 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; text-align  : center; }
+
+.movie-library-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  background-color: rgba(74, 222, 128, .14);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, .4);
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 180ms ease, border-color 180ms ease;
+  font: inherit;
+}
+
+.movie-library-button:hover {
+  background-color: rgba(74, 222, 128, .24);
+  border-color: rgba(74, 222, 128, .7);
+}
+
+.movie-detail__library-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.movie-detail__library-status label {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.movie-detail__library-status .movie-card__status-select {
+  width: auto;
+  min-width: 190px;
+}
+
 @media (max-width: 700px) {
   #root { padding: 0 20px; }
   .site-nav { gap: 16px; flex-wrap: wrap; }
@@ -80,7 +119,7 @@ footer { display: flex; align-items: center; justify-content: center; padding: 2
   .hero-copy { padding-top: 56px; }
   .movie-grid { grid-template-columns: 1fr; }
   .movie-card-actions { flex-direction: column; align-items: stretch; }
-  .favorite-button, .movie-infos-button { width: 100%; }
+  .favorite-button, .movie-infos-button, .movie-library-button { width: 100%; }
   .favorite-toast {
     right: 16px;
     left: 16px;
@@ -89,6 +128,8 @@ footer { display: flex; align-items: center; justify-content: center; padding: 2
   }
   .movie-detail__hero, .movie-detail__info { grid-template-columns: 1fr; }
   .movie-detail__actions { flex-direction: column; align-items: stretch; }
+  .movie-detail__library-status { flex-direction: column; align-items: stretch; }
+  .movie-detail__library-status .movie-card__status-select { width: 100%; min-width: 0; }
 }
 .search-button {
   margin-left: 0;
@@ -142,4 +183,36 @@ footer { display: flex; align-items: center; justify-content: center; padding: 2
 @media (max-width: 700px) {
   .not-found { padding: 56px 0 96px; }
   .pagination { flex-direction: column; gap: 12px; }
+}
+
+.movie-card__status-select {
+  padding: 8px 12px;
+  background-color: rgba(74, 222, 128, .14);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, .4);
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.movie-card__status-select:hover {
+  background-color: rgba(74, 222, 128, .24);
+  border-color: rgba(74, 222, 128, .7);
+}
+
+.movie-card__remove-button {
+  padding: 8px 12px;
+  background-color: rgba(74, 222, 128, .14);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, .4);
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.movie-card__remove-button:hover {
+  background-color: rgba(74, 222, 128, .24);
+  border-color: rgba(74, 222, 128, .7);
 }

@@ -68,7 +68,7 @@ function AppShell() {
 				<Route path="/movies" element={<Movies favorites={favorites} onToggleFavorite={toggleFavorite} />} />
 				<Route path="/movie/:id" element={<Movie favorites={favorites} onToggleFavorite={toggleFavorite} />} />
 				<Route path="/favorites" element={<Favorites favorites={favorites} onToggleFavorite={toggleFavorite} />} />
-				<Route path="/library" element={<LibraryPage />} />
+				<Route path="/library" element={<LibraryPage favorites={favorites} onToggleFavorite={toggleFavorite} />} />
 				<Route path="/profile" element={<Profile />} />
 				<Route path="/search" element={<Search favorites={favorites} onToggleFavorite={toggleFavorite} />} />
 				<Route path="*" element={<NotFound />} />

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import type { ChangeEvent } from "react";
 import { Link, useParams } from "react-router-dom";
 import { fetchMovieDetails } from "../services/tmdb";
-import type { Movie as MovieType } from "../types/movie";
+import type { Movie as MovieType, WatchStatus } from "../types/movie";
+import { useLibrary } from "../context/LibraryContext";
 
 interface MovieProps {
   favorites: number[];
@@ -13,6 +15,7 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
   const [movie, setMovie] = useState<MovieType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const { library, addToLibrary, removeFromLibrary, updateStatus } = useLibrary();
 
   useEffect(() => {
     if (!id) return;
@@ -37,6 +40,28 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
   }
 
   const isFavorite = favorites.includes(movie.id);
+  const libraryMovie = library.find((item) => item.id === movie.id);
+  const isInLibrary = Boolean(libraryMovie);
+
+  const toggleLibrary = () => {
+    if (libraryMovie) {
+      removeFromLibrary(movie.id);
+    } else {
+      addToLibrary(movie, "to_watch");
+    }
+  };
+
+  const handleLibraryStatusChange = (
+    event: ChangeEvent<HTMLSelectElement>
+  ) => {
+    const status = event.target.value as WatchStatus;
+
+    if (libraryMovie) {
+      updateStatus(movie.id, status);
+    } else {
+      addToLibrary(movie, status);
+    }
+  };
 
   return (
     <section className="movie-detail">
@@ -59,8 +84,35 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
             >
               {isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
             </button>
-            <Link to="/movies" className="movie-infos-button">Retour aux films</Link>
+            <button
+              type="button"
+              className="movie-library-button"
+              onClick={toggleLibrary}
+            >
+              {isInLibrary
+                ? "Retirer de la bibliothèque"
+                : "Ajouter à la bibliothèque"}
+            </button>
+            <Link to="/movies" className="movie-infos-button">
+              Retour aux films
+            </Link>
           </div>
+
+          {isInLibrary && (
+            <div className="movie-detail__library-status">
+              <label htmlFor="movie-library-status">Statut :</label>
+              <select
+                id="movie-library-status"
+                className="movie-card__status-select"
+                value={libraryMovie?.status ?? "to_watch"}
+                onChange={handleLibraryStatusChange}
+              >
+                <option value="to_watch">À regarder</option>
+                <option value="in_progress">En cours</option>
+                <option value="watched">Vu</option>
+              </select>
+            </div>
+          )}
 
           <div className="movie-detail__info">
             <div>
@@ -86,4 +138,3 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
 }
 
 export default Movie;
-
