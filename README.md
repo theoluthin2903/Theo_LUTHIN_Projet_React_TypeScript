@@ -237,4 +237,4 @@ Projet React / TypeScript — CineScope.
 
 ## 📄 Licence
 
-Ce projet est réalisé dans un cadre pédagogique.
+Ce projet est réalisé dans un cadre scolaire.
