@@ -1,18 +1,22 @@
 interface SearchBarProps {
   search: string;
   onSearchChange: (value: string) => void;
+  onSubmit: () => void;
 }
 
-function SearchBar({ search, onSearchChange }: SearchBarProps) {
+function SearchBar({ search, onSearchChange, onSubmit }: SearchBarProps) {
   return (
-    <div className="search-bar">
+    <form className="search-bar" onSubmit={(event) => { event.preventDefault(); onSubmit(); }}>
+      <label htmlFor="movie-search">Rechercher un film</label>
       <input
+        id="movie-search"
         type="text"
-        placeholder="Rechercher un film..."
+        placeholder="Titre du film..."
         value={search}
         onChange={(event) => onSearchChange(event.target.value)}
       />
-    </div>
+      <button type="submit" className="search-submit">Rechercher</button>
+    </form>
   );
 }
 

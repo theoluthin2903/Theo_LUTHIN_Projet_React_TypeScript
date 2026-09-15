@@ -1,5 +1,7 @@
-import { movies } from "../data/movies";
+import { useEffect, useState } from "react";
 import MovieGrid from "../components/MovieGrid";
+import { fetchMovieDetails } from "../services/tmdb";
+import type { Movie } from "../types/movie";
 
 interface FavoritesProps {
   favorites: number[];
@@ -7,7 +9,13 @@ interface FavoritesProps {
 }
 
 function Favorites({ favorites, onToggleFavorite }: FavoritesProps) {
-  const favoriteMovies = movies.filter((movie) => favorites.includes(movie.id));
+  const [favoriteMovies, setFavoriteMovies] = useState<Movie[]>([]);
+
+  useEffect(() => {
+    Promise.all(favorites.map((id) => fetchMovieDetails(id)))
+      .then(setFavoriteMovies)
+      .catch(() => setFavoriteMovies([]));
+  }, [favorites]);
 
   return (
     <>

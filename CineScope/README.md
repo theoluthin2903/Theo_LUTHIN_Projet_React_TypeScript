@@ -1,75 +1,53 @@
-# React + TypeScript + Vite
+# CineScope
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+CineScope est une application React/TypeScript permettant de parcourir des films, rechercher un titre, consulter ses détails et gérer ses favoris.
 
-Currently, two official plugins are available:
+## Fonctionnalités
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Catalogue de films populaires fourni par l'API TMDB
+- Pagination du catalogue
+- Recherche de films via TMDB
+- Page de détail avec affiche, note, genres, durée, distribution et pays de production
+- Ajout et retrait des favoris avec conservation dans le navigateur
+- Navigation avec React Router
+- Interface responsive
 
-## React Compiler
+## Technologies
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19
+- TypeScript
+- Vite
+- React Router
+- API The Movie Database (TMDB)
+- CSS
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Créez un fichier `.env` à la racine de `CineScope` à partir de `.env.example` :
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```env
+VITE_TMDB_API_KEY=votre_cle_api_tmdb
 ```
+
+La clé peut être créée depuis le compte TMDB, dans la section API. Ne commitez jamais votre fichier `.env`.
+
+## Lancer le projet
+
+```bash
+npm run dev
+```
+
+L'application sera disponible à l'adresse indiquée par Vite, généralement `http://localhost:5173`.
+
+## Vérifications
+
+```bash
+npm run lint
+npm run build
+```
+
+Les films affichés proviennent de TMDB. Le catalogue est paginé car l'API renvoie ses résultats par pages ; il n'est pas possible de charger la totalité des films existants en une seule requête.

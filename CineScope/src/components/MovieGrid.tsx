@@ -1,5 +1,5 @@
 import MovieCard from "./MovieCard";
-import type { Movie } from "../data/movies";
+import type { Movie } from "../types/movie";
 
 interface MovieGridProps {
   movies: Movie[];

@@ -1,15 +1,7 @@
 import { Link } from "react-router-dom";
+import type { Movie } from "../types/movie";
 
-interface MovieCardProps {
-  id: number;
-  title: string;
-  year: number;
-  note: number;
-  genres: string[];
-  duree: number;
-  description: string;
-  realisateur: string[];
-  imagePath: string;
+interface MovieCardProps extends Movie {
   isFavorite: boolean;
   onToggleFavorite: (movieId: number) => void;
 }
@@ -29,7 +21,7 @@ function MovieCard({
 }: MovieCardProps) {
   return (
     <article className="movie-card">
-      <img src={imagePath} alt={title} />
+      {imagePath ? <img src={imagePath} alt={title} /> : <div className="movie-card__poster-placeholder">Affiche indisponible</div>}
       <h2 className="movie-card__title">{title}</h2>
       <p>De {realisateur.join(" et ")}</p>
       <p>{genres.join(", ")}</p>

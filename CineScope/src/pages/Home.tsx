@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import MovieGrid from "../components/MovieGrid";
-import { movies } from "../data/movies";
+import { fetchPopularMovies } from "../services/tmdb";
+import type { Movie } from "../types/movie";
 
 interface HomeProps {
   favorites: number[];
@@ -7,7 +9,14 @@ interface HomeProps {
 }
 
 function Home({ favorites, onToggleFavorite }: HomeProps) {
-  const filterMovies = movies.filter((movie) => movie.id <= 6);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    fetchPopularMovies()
+      .then((result) => setMovies(result.movies.slice(0, 6)))
+      .catch(() => setError(true));
+  }, []);
 
   return (
     <>
@@ -22,11 +31,8 @@ function Home({ favorites, onToggleFavorite }: HomeProps) {
           <h2>Films Populaires :</h2>
         </section>
 
-        <MovieGrid
-          movies={filterMovies}
-          favorites={favorites}
-          onToggleFavorite={onToggleFavorite}
-        />
+        {error && <p role="alert">Impossible de charger les films populaires.</p>}
+        {!error && movies.length > 0 && <MovieGrid movies={movies} favorites={favorites} onToggleFavorite={onToggleFavorite} />}
       </section>
     </>
   );

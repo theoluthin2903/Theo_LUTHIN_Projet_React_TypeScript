@@ -6,7 +6,7 @@ function Navbar() {
 
 	return (
 		<nav className="site-nav">
-			<strong className="brand">CineScope</strong>
+			<NavLink to="/" className="brand">CineScope</NavLink>
 			<div className="nav-links">
 				<NavLink to="/" end className={getNavLinkClass}>Accueil</NavLink>
 				<NavLink to="/movies" className={getNavLinkClass}>Films</NavLink>
@@ -14,7 +14,7 @@ function Navbar() {
 				<NavLink to="/library" className={getNavLinkClass}>Bibliothèque</NavLink>
 				<NavLink to="/profile" className={getNavLinkClass}>Profil</NavLink>
 			</div>
-			<button type="button" className="search-button" onClick={() => window.location.href = "/movies"}>Rechercher</button>
+			<NavLink to="/search" className="search-button">Rechercher</NavLink>
 		</nav>
 	);
 }
