@@ -40,6 +40,7 @@ L'objectif du projet est de proposer une interface moderne et intuitive permetta
 * **Node.js**
 * **npm**
 * **Git / GitHub**
+* **Scalingo**
 
 ---
 
@@ -179,11 +180,12 @@ npm run preview
 
 ## 🌐 Version déployée
 
+Version deployée sur Scalingo 
+
 La version en ligne de **CineScope** est disponible à l'adresse suivante :
 
-**[À compléter avec l'URL de déploiement]**
+**https://app-cinescope-theol.osc-fr1.scalingo.io**
 
-> Exemple : `https://mon-projet-cinescope.vercel.app`
 
 ---
 
