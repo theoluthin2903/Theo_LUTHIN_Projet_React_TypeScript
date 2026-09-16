@@ -14,7 +14,6 @@ export function MovieCard(props: MovieCardProps) {
     genres,
     year,
     note,
-    description,
     imagePath,
     isFavorite,
     onToggleFavorite,
@@ -49,7 +48,6 @@ export function MovieCard(props: MovieCardProps) {
       {genres && <p>{genres.join(", ")}</p>}
       {year && <p>{year}</p>}
       {note !== undefined && <p>Note : ⭐{note.toFixed(1)}/10</p>}
-      {description && <p dangerouslySetInnerHTML={{ __html: description }} />}
 
       {/* Sélecteur de statut de la bibliothèque */}
       <div className="movie-card__library-status">
