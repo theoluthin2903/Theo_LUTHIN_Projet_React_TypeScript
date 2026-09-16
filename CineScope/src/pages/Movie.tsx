@@ -70,6 +70,25 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
     setUserRating(typeof savedRating === "number" ? savedRating : 0);
   }, [movie, user]);
 
+  // Un film est considéré comme "vu" dès que l'utilisateur ouvre sa page de détail.
+  useEffect(() => {
+    if (!movie || !user) return;
+
+    const viewed = JSON.parse(
+      localStorage.getItem("cinescope_viewed_movies") || "{}"
+    ) as Record<string, number[]>;
+
+    const userViewed = Array.isArray(viewed[user.email])
+      ? viewed[user.email]
+      : [];
+
+    if (!userViewed.includes(movie.id)) {
+      viewed[user.email] = [...userViewed, movie.id];
+      localStorage.setItem("cinescope_viewed_movies", JSON.stringify(viewed));
+      window.dispatchEvent(new Event("cinescope:viewed-updated"));
+    }
+  }, [movie, user]);
+
   if (loading) return <section className="movie-detail--empty"><p>Chargement du film...</p></section>;
 
   if (error || !movie) {
