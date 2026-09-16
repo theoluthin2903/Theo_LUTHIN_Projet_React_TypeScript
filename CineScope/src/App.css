@@ -24,14 +24,14 @@
 .search-empty { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 28px; margin-bottom: 72px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
 .search-empty h2 { font-size: 28px; }
 .search-empty p { color: var(--muted); }
-.movie-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; padding-bottom: 72px; }
-.movie-card { min-height: 160px; padding: 26px; box-sizing: border-box; background: linear-gradient(145deg, var(--surface-raised), var(--surface)); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); transition: transform 180ms ease, border-color 180ms ease; }
+.movie-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; padding-bottom: 60px; }
+.movie-card { min-height: 120px; padding: 12px; box-sizing: border-box; background: linear-gradient(145deg, var(--surface-raised), var(--surface)); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); transition: transform 180ms ease, border-color 180ms ease; }
 .movie-card:hover { transform: translateY(-5px); border-color: rgba(242, 184, 75, .55); }
-.movie-card__title { margin-bottom: 20px; font-size: 26px; color: var(--text-h); }
-.movie-card p { color: var(--muted); font-size: 14px; }
+.movie-card__title { margin-bottom: 10px; font-size: 18px; color: var(--text-h); }
+.movie-card p { color: var(--muted); font-size: 12px; }
 .movie-card p:last-child { margin-top: 6px; color: var(--accent); }
-.movie-card img { width: 100%; height: auto; border-radius: 8px; margin-bottom: 12px; }
-.movie-card-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.movie-card img { width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 7px; margin-bottom: 8px; }
+.movie-card-actions { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-top: 10px; }
 .favorite-button, .movie-infos-button, .movie-library-button, .go-to-films-button, .auth-password-toggle-button {
   display: inline-flex;
   align-items: center;
@@ -506,4 +506,25 @@ footer { display: flex; align-items: center; justify-content: center; padding: 2
   .profile-actions button {
     width: 100%;
   }
+}
+
+/* Cartes de films compactes */
+.movie-card .favorite-button,
+.movie-card .movie-infos-button,
+.movie-card .movie-library-button,
+.movie-card .go-to-films-button {
+  padding: 6px 9px;
+  font-size: 12px;
+}
+
+@media (max-width: 1100px) {
+  .movie-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 850px) {
+  .movie-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 700px) {
+  .movie-grid { grid-template-columns: 1fr; }
 }
