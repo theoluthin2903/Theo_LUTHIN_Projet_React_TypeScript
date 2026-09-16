@@ -1,218 +1,213 @@
-import { useState } from "react";
-import type { ChangeEvent, FormEvent } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { useProfile } from "../context/ProfileContext";
+import { fetchMovieDetails } from "../services/tmdb";
 
-interface ProfileFormData {
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  bio: string;
+interface ProfileMovie {
+  id: number;
+  title: string;
+  year?: string;
+  imagePath?: string;
 }
 
-type ProfileFormErrors = Partial<Record<keyof ProfileFormData, string>>;
-
-const initialFormData: ProfileFormData = {
-  firstName: "",
-  lastName: "",
-  username: "",
-  email: "",
-  bio: "",
-};
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function toProfileMovie(movie: any): ProfileMovie {
+  return {
+    id: Number(movie.id),
+    title: movie.title || movie.name || "Film sans titre",
+    year:
+      movie.year ||
+      (movie.release_date
+        ? String(movie.release_date).slice(0, 4)
+        : undefined),
+    imagePath:
+      movie.imagePath ||
+      (movie.poster_path
+        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+        : undefined),
+  };
+}
 
 function Profile() {
-  const [formData, setFormData] = useState<ProfileFormData>(initialFormData);
-  const [errors, setErrors] = useState<ProfileFormErrors>({});
-  const [successMessage, setSuccessMessage] = useState("");
-  const [savedUsername, setSavedUsername] = useState("");
+  const { user, logout } = useAuth();
   const { setUsername } = useProfile();
 
-  const validateField = (name: keyof ProfileFormData, value: string): string => {
-    if (name === "bio") {
-      return "";
+  const [savedRatings, setSavedRatings] = useState<Record<string, number>>({});
+  const [watchedMovies, setWatchedMovies] = useState<ProfileMovie[]>([]);
+  const [ratedMovies, setRatedMovies] = useState<ProfileMovie[]>([]);
+
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username);
     }
+  }, [user, setUsername]);
 
-    if (!value.trim()) {
-      return "Ce champ est obligatoire.";
-    }
-
-    if (name === "email" && !EMAIL_REGEX.test(value.trim())) {
-      return "Veuillez saisir une adresse e-mail valide.";
-    }
-
-    return "";
-  };
-
-  const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = event.target;
-    const fieldName = name as keyof ProfileFormData;
-
-    setFormData((prev) => ({ ...prev, [fieldName]: value }));
-
-    setErrors((prev) => {
-      if (!prev[fieldName]) {
-        return prev;
-      }
-
-      const fieldError = validateField(fieldName, value);
-      const nextErrors = { ...prev };
-
-      if (fieldError) {
-        nextErrors[fieldName] = fieldError;
-      } else {
-        delete nextErrors[fieldName];
-      }
-
-      return nextErrors;
-    });
-
-    if (successMessage) {
-      setSuccessMessage("");
-      setSavedUsername("");
-    }
-  };
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const fieldNames = Object.keys(formData) as (keyof ProfileFormData)[];
-    const nextErrors: ProfileFormErrors = {};
-
-    fieldNames.forEach((fieldName) => {
-      const fieldError = validateField(fieldName, formData[fieldName]);
-      if (fieldError) {
-        nextErrors[fieldName] = fieldError;
-      }
-    });
-
-    setErrors(nextErrors);
-
-    if (Object.keys(nextErrors).length > 0) {
-      setSuccessMessage("");
-      setSavedUsername("");
+  const loadProfileMovies = useCallback(async () => {
+    if (!user) {
+      setSavedRatings({});
+      setWatchedMovies([]);
+      setRatedMovies([]);
       return;
     }
 
-    console.log("Profil enregistré :", formData);
-    setSuccessMessage("Profil enregistré avec succès.");
-    setSavedUsername(formData.username.trim());
-    setUsername(formData.username.trim());
-  };
+    // Films notés = uniquement les films pour lesquels l'utilisateur
+    // possède réellement une note enregistrée, indépendamment de la bibliothèque.
+    const ratings = JSON.parse(
+      localStorage.getItem("cinescope_ratings") || "{}"
+    ) as Record<string, unknown>;
+
+    const prefix = `${user.email}:`;
+    const userRatings: Record<string, number> = {};
+
+    Object.entries(ratings).forEach(([key, value]) => {
+      if (key.startsWith(prefix) && typeof value === "number") {
+        userRatings[key.slice(prefix.length)] = value;
+      }
+    });
+
+    setSavedRatings(userRatings);
+
+    // Films vus = films dont la page de détail a été ouverte.
+    const viewed = JSON.parse(
+      localStorage.getItem("cinescope_viewed_movies") || "{}"
+    ) as Record<string, unknown>;
+
+    const viewedIds = Array.isArray(viewed[user.email])
+      ? (viewed[user.email] as unknown[])
+          .map(Number)
+          .filter((id) => Number.isFinite(id))
+      : [];
+
+    const ratedIds = Object.keys(userRatings)
+      .map(Number)
+      .filter((id) => Number.isFinite(id));
+
+    const uniqueIds = (ids: number[]) => [...new Set(ids)];
+
+    const fetchMovies = async (ids: number[]) => {
+      const results = await Promise.all(
+        uniqueIds(ids).map(async (id) => {
+          try {
+            const movie = await fetchMovieDetails(id);
+            return movie ? toProfileMovie(movie) : null;
+          } catch {
+            return null;
+          }
+        })
+      );
+
+      return results.filter((movie): movie is ProfileMovie => movie !== null);
+    };
+
+    const [viewedResults, ratedResults] = await Promise.all([
+      fetchMovies(viewedIds),
+      fetchMovies(ratedIds),
+    ]);
+
+    setWatchedMovies(viewedResults);
+    setRatedMovies(ratedResults);
+  }, [user]);
+
+  useEffect(() => {
+    void loadProfileMovies();
+
+    const refresh = () => {
+      void loadProfileMovies();
+    };
+
+    window.addEventListener("storage", refresh);
+    window.addEventListener("cinescope:ratings-updated", refresh);
+    window.addEventListener("cinescope:viewed-updated", refresh);
+
+    return () => {
+      window.removeEventListener("storage", refresh);
+      window.removeEventListener("cinescope:ratings-updated", refresh);
+      window.removeEventListener("cinescope:viewed-updated", refresh);
+    };
+  }, [loadProfileMovies]);
+
+  if (!user) {
+    return null;
+  }
 
   return (
-    <section>
+    <section className="profile-page">
       <section className="hero-copy">
         <span className="eyebrow">Profil</span>
-        <h1>Mon profil</h1>
-        <p>Gérez vos informations personnelles et votre biographie.</p>
+        <h1>Bonjour, {user.username}</h1>
+        <p>{user.email}</p>
       </section>
 
-      <form className="profile-form" onSubmit={handleSubmit} noValidate>
-        <div className="profile-form__row">
-          <div className="profile-form__field">
-            <label htmlFor="firstName">Prénom</label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              placeholder="Votre prénom"
-              value={formData.firstName}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.firstName)}
-              aria-describedby={errors.firstName ? "firstName-error" : undefined}
-            />
-            {errors.firstName && (
-              <p className="profile-form__error" id="firstName-error" role="alert">
-                {errors.firstName}
-              </p>
-            )}
-          </div>
-
-          <div className="profile-form__field">
-            <label htmlFor="lastName">Nom</label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              placeholder="Votre nom"
-              value={formData.lastName}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.lastName)}
-              aria-describedby={errors.lastName ? "lastName-error" : undefined}
-            />
-            {errors.lastName && (
-              <p className="profile-form__error" id="lastName-error" role="alert">
-                {errors.lastName}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="profile-form__field">
-          <label htmlFor="username">Pseudonyme</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            placeholder="Votre pseudonyme"
-            value={formData.username}
-            onChange={handleChange}
-            aria-invalid={Boolean(errors.username)}
-            aria-describedby={errors.username ? "username-error" : undefined}
-          />
-          {errors.username && (
-            <p className="profile-form__error" id="username-error" role="alert">
-              {errors.username}
-            </p>
-          )}
-        </div>
-
-        <div className="profile-form__field">
-          <label htmlFor="email">Adresse e-mail</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="votre@email.com"
-            value={formData.email}
-            onChange={handleChange}
-            aria-invalid={Boolean(errors.email)}
-            aria-describedby={errors.email ? "email-error" : undefined}
-          />
-          {errors.email && (
-            <p className="profile-form__error" id="email-error" role="alert">
-              {errors.email}
-            </p>
-          )}
-        </div>
-
-        <div className="profile-form__field">
-          <label htmlFor="bio">Biographie (facultatif)</label>
-          <textarea
-            id="bio"
-            name="bio"
-            placeholder="Parlez-nous un peu de vous..."
-            rows={5}
-            value={formData.bio}
-            onChange={handleChange}
-          />
-        </div>
-
-        <button type="submit" className="search-submit profile-form__submit">
-          Enregistrer mon profil
+      <div className="profile-actions">
+        <Link to="/movies" className="search-submit">
+          Explorer les films
+        </Link>
+        <button type="button" className="profile-logout" onClick={logout}>
+          Se déconnecter
         </button>
+      </div>
 
-        {successMessage && (
-          <div className="profile-form__success" role="status">
-            <p className="profile-form__success-message">{successMessage}</p>
-            <p className="profile-form__welcome">Bienvenue, {savedUsername} !</p>
+      <section className="profile-section">
+        <h2>Historique des films vus</h2>
+        {watchedMovies.length === 0 ? (
+          <div className="profile-empty">
+            <p>Vous n'avez pas encore ouvert la fiche d'un film.</p>
+            <Link to="/movies" className="movie-infos-button">
+              Voir les films
+            </Link>
+          </div>
+        ) : (
+          <div className="movie-grid">
+            {watchedMovies.map((movie) => (
+              <article className="movie-card" key={movie.id}>
+                {movie.imagePath && (
+                  <img src={movie.imagePath} alt={movie.title} />
+                )}
+                <h3 className="movie-card__title">{movie.title}</h3>
+                <p>{movie.year || "Date inconnue"}</p>
+                <Link
+                  to={`/movie/${movie.id}`}
+                  className="movie-infos-button"
+                >
+                  Voir le film
+                </Link>
+              </article>
+            ))}
           </div>
         )}
-      </form>
+      </section>
+
+      <section className="profile-section">
+        <h2>Films notés</h2>
+        {ratedMovies.length === 0 ? (
+          <div className="profile-empty">
+            <p>Vous n'avez pas encore noté de film.</p>
+            <Link to="/movies" className="movie-infos-button">
+              Noter un film
+            </Link>
+          </div>
+        ) : (
+          <div className="movie-grid">
+            {ratedMovies.map((movie) => (
+              <article className="movie-card" key={movie.id}>
+                {movie.imagePath && (
+                  <img src={movie.imagePath} alt={movie.title} />
+                )}
+                <h3 className="movie-card__title">{movie.title}</h3>
+                <p>
+                  Votre note : ⭐ {savedRatings[String(movie.id)]}/5
+                </p>
+                <Link
+                  to={`/movie/${movie.id}`}
+                  className="movie-infos-button"
+                >
+                  Voir le film
+                </Link>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
     </section>
   );
 }

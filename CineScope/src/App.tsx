@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "../components/Footer";
@@ -10,12 +10,25 @@ import { LibraryPage } from "./pages/Library";
 import { LibraryProvider } from './context/LibraryContext';
 import { ProfileProvider } from './context/ProfileContext';
 import Profile from "./pages/Profile";
+import Auth from "./pages/Auth";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import Search from "./pages/Search";
 import NotFound from "./pages/NotFound";
 import "./App.css";
 
+function ProtectedProfile() {
+  const { user } = useAuth();
+
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  return <Profile />;
+}
+
 function AppShell() {
 	const location = useLocation();
+    const { user } = useAuth();
 	const showHeader = !location.pathname.startsWith("/movie/");
 	const [favorites, setFavorites] = useState<number[]>(() => {
 		const savedFavorites = localStorage.getItem("favorites");
@@ -58,7 +71,7 @@ function AppShell() {
 	return (
 		<ProfileProvider>
 		<main className="app-shell">
-			{showHeader && <Navbar />}
+			{showHeader && user && <Navbar />}
 			{toastMessage && (
 				<div className="favorite-toast" role="status" aria-live="polite">
 					{toastMessage}
@@ -66,12 +79,16 @@ function AppShell() {
 			)}
 			<LibraryProvider>
 			<Routes>
-				<Route path="/" element={<Home favorites={favorites} onToggleFavorite={toggleFavorite} />} />
+				<Route
+                    path="/"
+                    element={user ? <Home favorites={favorites} onToggleFavorite={toggleFavorite} /> : <Navigate to="/auth" replace />}
+                />
 				<Route path="/movies" element={<Movies favorites={favorites} onToggleFavorite={toggleFavorite} />} />
 				<Route path="/movie/:id" element={<Movie favorites={favorites} onToggleFavorite={toggleFavorite} />} />
 				<Route path="/favorites" element={<Favorites favorites={favorites} onToggleFavorite={toggleFavorite} />} />
 				<Route path="/library" element={<LibraryPage favorites={favorites} onToggleFavorite={toggleFavorite} />} />
-				<Route path="/profile" element={<Profile />} />
+				<Route path="/auth" element={<Auth />} />
+                <Route path="/profile" element={<ProtectedProfile />} />
 				<Route path="/search" element={<Search favorites={favorites} onToggleFavorite={toggleFavorite} />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
@@ -84,9 +101,11 @@ function AppShell() {
 
 function App() {
 	return (
-		<BrowserRouter>
-			<AppShell />
-		</BrowserRouter>
+		<AuthProvider>
+			<BrowserRouter>
+				<AppShell />
+			</BrowserRouter>
+		</AuthProvider>
 	);
 }
 export default App;

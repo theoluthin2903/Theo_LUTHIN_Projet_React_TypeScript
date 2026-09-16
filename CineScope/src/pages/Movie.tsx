@@ -4,18 +4,52 @@ import { Link, useParams } from "react-router-dom";
 import { fetchMovieDetails } from "../services/tmdb";
 import type { Movie as MovieType, WatchStatus } from "../types/movie";
 import { useLibrary } from "../context/LibraryContext";
+import { useAuth } from "../context/AuthContext";
 
 interface MovieProps {
   favorites: number[];
   onToggleFavorite: (movieId: number, movieTitle: string) => void;
 }
 
+const getCountryName = (country: string): string => {
+  if (!country) return country;
+
+  // TMDB fournit généralement un code ISO 3166-1 (ex. FR, US, GB).
+  // Si une valeur est déjà un nom complet, on la conserve.
+  if (country.length !== 2) return country;
+
+  try {
+    const displayNames = new Intl.DisplayNames(["fr"], { type: "region" });
+    return displayNames.of(country.toUpperCase()) || country;
+  } catch {
+    return country;
+  }
+};
+
+const getLanguageName = (language: string): string => {
+  if (!language) return language;
+
+  // TMDB fournit généralement un code ISO 3166-1 (ex. FR, US, GB).
+  // Si une valeur est déjà un nom complet, on la conserve.
+  if (language.length !== 2) return language;
+
+  try {
+    const displayNames = new Intl.DisplayNames(["fr"], { type: "language" });
+    return displayNames.of(language.toUpperCase()) || language;
+  } catch {
+    return language;
+  }
+};
+
 function Movie({ favorites, onToggleFavorite }: MovieProps) {
   const { id } = useParams<{ id: string }>();
   const [movie, setMovie] = useState<MovieType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [userRating, setUserRating] = useState(0);
+    const [ratingMessage, setRatingMessage] = useState("");
   const { library, addToLibrary, removeFromLibrary, updateStatus } = useLibrary();
+  const { user } = useAuth();
 
   useEffect(() => {
     if (!id) return;
@@ -26,6 +60,15 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, [id]);
+
+  useEffect(() => {
+    if (!movie || !user) return;
+
+    const ratings = JSON.parse(localStorage.getItem("cinescope_ratings") || "{}");
+    const savedRating = ratings[`${user.email}:${movie.id}`];
+
+    setUserRating(typeof savedRating === "number" ? savedRating : 0);
+  }, [movie, user]);
 
   if (loading) return <section className="movie-detail--empty"><p>Chargement du film...</p></section>;
 
@@ -61,6 +104,44 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
     } else {
       addToLibrary(movie, status);
     }
+  };
+
+  const hasSavedRating =
+    Boolean(user && movie && Object.prototype.hasOwnProperty.call(
+      JSON.parse(localStorage.getItem("cinescope_ratings") || "{}"),
+      `${user.email}:${movie.id}`
+    ));
+
+  const handleRatingSubmit = () => {
+    if (!user) {
+      setRatingMessage("Connectez-vous pour enregistrer une note.");
+      return;
+    }
+
+    const ratings = JSON.parse(
+      localStorage.getItem("cinescope_ratings") || "{}"
+    );
+
+    ratings[`${user.email}:${movie.id}`] = userRating;
+    localStorage.setItem("cinescope_ratings", JSON.stringify(ratings));
+    window.dispatchEvent(new Event("cinescope:ratings-updated"));
+
+    setRatingMessage("Votre note a été enregistrée.");
+  };
+
+  const handleRatingDelete = () => {
+    if (!user) return;
+
+    const ratings = JSON.parse(
+      localStorage.getItem("cinescope_ratings") || "{}"
+    );
+
+    delete ratings[`${user.email}:${movie.id}`];
+    localStorage.setItem("cinescope_ratings", JSON.stringify(ratings));
+
+    setUserRating(0);
+    setRatingMessage("Votre note a été supprimée.");
+    window.dispatchEvent(new Event("cinescope:ratings-updated"));
   };
 
   return (
@@ -114,6 +195,52 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
             </div>
           )}
 
+          <div className="movie-rating">
+            <h2>Ma note</h2>
+
+            <div className="movie-rating__selection">
+              <div
+                className="movie-rating__stars"
+                role="radiogroup"
+                aria-label="Ma note"
+              >
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    className={star <= userRating ? "star selected" : "star"}
+                    onClick={() => {
+                      setUserRating(star === userRating ? 0 : star);
+                      setRatingMessage("");
+                    }}
+                    aria-label={`${star} étoile${star > 1 ? "s" : ""}`}
+                    aria-pressed={star <= userRating}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+
+              <span className="movie-rating__selected">
+                {userRating}/5
+              </span>
+            </div>
+
+            <button
+              type="button"
+              className="movie-rating__submit"
+              onClick={hasSavedRating ? handleRatingDelete : handleRatingSubmit}
+            >
+              {hasSavedRating ? "Supprimer ma note" : "Enregistrer ma note"}
+            </button>
+
+            {ratingMessage && (
+              <p className="movie-rating__message" role="status">
+                {ratingMessage}
+              </p>
+            )}
+          </div>
+
           <div className="movie-detail__info">
             <div>
               <h2>Synopsis</h2>
@@ -128,8 +255,14 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
                 ))}
               </ul>
             </div>
-            <p>Langue originale : {movie.originalLanguage}</p>
-            <p>Pays de production : {movie.productionCountries.join(", ") || "Non renseigné"}</p>
+            <p>Langue originale : {getLanguageName(movie.originalLanguage)}
+            </p>
+            <p>
+              Pays de production :{" "}
+              {movie.productionCountries.length > 0
+              ? movie.productionCountries.map(getCountryName).join(", ")
+            : "Non renseigné"}
+            </p>
           </div>
         </div>
       </div>
