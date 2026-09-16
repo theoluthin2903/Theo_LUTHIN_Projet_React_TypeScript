@@ -1,8 +1,10 @@
 import { NavLink } from "react-router-dom";
+import { useProfile } from "../context/ProfileContext";
 
 function Navbar() {
 	const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
 		isActive ? "nav-link active" : "nav-link";
+	const { username } = useProfile();
 
 	return (
 		<nav className="site-nav">
@@ -14,6 +16,7 @@ function Navbar() {
 				<NavLink to="/library" className={getNavLinkClass}>Bibliothèque</NavLink>
 				<NavLink to="/profile" className={getNavLinkClass}>Profil</NavLink>
 			</div>
+			{username && <span className="navbar-welcome">Bienvenue, {username} !</span>}
 			<NavLink to="/search" className="search-button">Rechercher</NavLink>
 		</nav>
 	);

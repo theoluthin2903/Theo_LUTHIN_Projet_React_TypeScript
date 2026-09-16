@@ -8,6 +8,7 @@ import Movies from "./pages/Movies";
 import Movie from "./pages/Movie";
 import { LibraryPage } from "./pages/Library";
 import { LibraryProvider } from './context/LibraryContext';
+import { ProfileProvider } from './context/ProfileContext';
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
 import NotFound from "./pages/NotFound";
@@ -55,6 +56,7 @@ function AppShell() {
 	};
 
 	return (
+		<ProfileProvider>
 		<main className="app-shell">
 			{showHeader && <Navbar />}
 			{toastMessage && (
@@ -76,6 +78,7 @@ function AppShell() {
 			</LibraryProvider>
 			<Footer />
 		</main>
+		</ProfileProvider>
 	);
 }
 

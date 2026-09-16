@@ -5,6 +5,7 @@
 .site-nav a { color: var(--muted); text-decoration: none; transition: color 180ms ease; }
 .site-nav a:hover, .site-nav a:focus-visible { color: var(--accent); }
 .site-nav a.nav-link.active { color: #4ade80; font-weight: 700; }
+.navbar-welcome { color: var(--text-h); font-weight: 700; white-space: nowrap; margin-right: 4px; }
 .hero-copy { padding: 76px 0 42px; }
 .eyebrow { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
 .hero-copy h1 { max-width: 680px; margin: 12px 0; font-size: clamp(42px, 7vw, 76px); line-height: .98; }
@@ -215,4 +216,42 @@ footer { display: flex; align-items: center; justify-content: center; padding: 2
 .movie-card__remove-button:hover {
   background-color: rgba(74, 222, 128, .24);
   border-color: rgba(74, 222, 128, .7);
+}
+.profile-form { display: flex; flex-direction: column; gap: 22px; max-width: 640px; margin-bottom: 72px; }
+.profile-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.profile-form__field { display: flex; flex-direction: column; gap: 8px; }
+.profile-form__field label { color: var(--text-h); font-weight: 700; }
+.profile-form__field input,
+.profile-form__field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 18px;
+  color: var(--text-h);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  font: inherit;
+  resize: vertical;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+.profile-form__field input:focus,
+.profile-form__field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.profile-form__field input[aria-invalid="true"],
+.profile-form__field textarea[aria-invalid="true"] { border-color: #f87171; }
+.profile-form__error { margin: 0; color: #f87171; font-size: 13px; }
+.profile-form__submit { align-self: flex-start; }
+.profile-form__success {
+  margin: 0;
+  padding: 14px 18px;
+  color: #4ade80;
+  background-color: rgba(74, 222, 128, .14);
+  border: 1px solid rgba(74, 222, 128, .4);
+  border-radius: 10px;
+}
+.profile-form__success-message { margin: 0; font-weight: 700; }
+.profile-form__welcome { margin: 4px 0 0; color: var(--text-h); }
+
+@media (max-width: 640px) {
+  .profile-form__row { grid-template-columns: 1fr; }
 }
