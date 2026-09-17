@@ -47,7 +47,7 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [userRating, setUserRating] = useState(0);
-    const [ratingMessage, setRatingMessage] = useState("");
+  const [ratingMessage, setRatingMessage] = useState("");
   const { library, addToLibrary, removeFromLibrary, updateStatus } = useLibrary();
   const { user } = useAuth();
 
