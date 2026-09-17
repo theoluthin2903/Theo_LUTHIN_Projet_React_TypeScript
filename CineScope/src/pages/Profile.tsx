@@ -148,7 +148,7 @@ function Profile() {
       </div>
 
       <section className="profile-section">
-        <h2>Historique des films vus</h2>
+        <h2>Historique des films inspectés</h2>
         {watchedMovies.length === 0 ? (
           <div className="profile-empty">
             <p>Vous n'avez pas encore ouvert la fiche d'un film.</p>
