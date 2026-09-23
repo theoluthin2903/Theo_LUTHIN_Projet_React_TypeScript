@@ -16,7 +16,9 @@ function Navbar() {
 				<NavLink to="/library" className={getNavLinkClass}>Bibliothèque</NavLink>
 				<NavLink to="/profile" className={getNavLinkClass}>Profil</NavLink>
 			</div>
-			{username && <span className="navbar-welcome">Bienvenue, {username} !</span>}
+			<div className="welcome-message">
+			    {username && <span className="navbar-welcome">Bienvenue, {username} !</span>}
+			</div>
 			<NavLink to="/search" className="search-button">Rechercher</NavLink>
 		</nav>
 	);
