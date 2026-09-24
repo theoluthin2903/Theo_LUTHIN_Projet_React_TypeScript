@@ -23,6 +23,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const saved = localStorage.getItem(CURRENT_USER_KEY);
     return saved ? JSON.parse(saved) : null;
   });
+  const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -31,6 +32,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.removeItem(CURRENT_USER_KEY);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (!toastMessage) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setToastMessage("");
+    }, 2200);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [toastMessage]);
 
   const getUsers = (): UserAccount[] => {
     const saved = localStorage.getItem(USERS_KEY);
@@ -62,6 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     localStorage.setItem(USERS_KEY, JSON.stringify([...users, newUser]));
+    setToastMessage(`${normalizedUsername} est bien inscrit !`);
 
     return null;
   };
@@ -82,6 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     setUser(foundUser);
+    setToastMessage(`${foundUser.username} est bien connecté !`);
     return null;
   };
 
@@ -91,6 +106,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return (
     <AuthContext.Provider value={{ user, register, login, logout }}>
+      {toastMessage && (
+        <div className="favorite-toast" role="status" aria-live="polite">
+          {toastMessage}
+        </div>
+      )}
       {children}
     </AuthContext.Provider>
   );
