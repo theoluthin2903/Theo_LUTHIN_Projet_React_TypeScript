@@ -1,25 +1,15 @@
 import { Link } from "react-router-dom";
 import type { Movie, WatchStatus } from "../types/movie";
 import { useLibrary } from "../context/LibraryContext";
+import { useFavorites } from "../context/FavoritesContext";
 
-interface MovieCardProps extends Movie {
-  isFavorite: boolean;
-  onToggleFavorite: (movieId: number, movieTitle: string) => void;
-}
+type MovieCardProps = Movie;
 
 export function MovieCard(props: MovieCardProps) {
-  const {
-    id,
-    title,
-    genres,
-    year,
-    note,
-    imagePath,
-    isFavorite,
-    onToggleFavorite,
-  } = props;
+  const { id, title, genres, year, note, imagePath } = props;
 
   const { library, addToLibrary, removeFromLibrary, updateStatus } = useLibrary();
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   // On vérifie si ce film est déjà enregistré dans la bibliothèque
   const currentMovieInLibrary = library.find((m) => m.id === id);
@@ -82,9 +72,9 @@ export function MovieCard(props: MovieCardProps) {
         <button
           type="button"
           className="favorite-button"
-          onClick={() => onToggleFavorite(id, title)}
+          onClick={() => toggleFavorite(id, title)}
         >
-          {isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+          {isFavorite(id) ? "Retirer des favoris" : "Ajouter aux favoris"}
         </button>
       </div>
     </article>

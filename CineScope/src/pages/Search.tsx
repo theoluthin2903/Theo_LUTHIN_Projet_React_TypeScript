@@ -4,12 +4,7 @@ import SearchBar from "../components/SearchBar";
 import { fetchPopularMovies, searchMovies } from "../services/tmdb";
 import type { Movie } from "../types/movie";
 
-interface SearchProps {
-  favorites: number[];
-  onToggleFavorite: (movieId: number, movieTitle: string) => void;
-}
-
-function Search({ favorites, onToggleFavorite }: SearchProps) {
+function Search() {
   const [search, setSearch] = useState("");
   const [submittedSearch, setSubmittedSearch] = useState("");
   const [results, setResults] = useState<Movie[]>([]);
@@ -46,11 +41,7 @@ function Search({ favorites, onToggleFavorite }: SearchProps) {
       {loading && <p role="status">Chargement des films...</p>}
       {error && <p role="alert">{error} Une erreur est survenue lors de la récupération des données.</p>}
       {!loading && !error && results.length > 0 && (
-        <MovieGrid
-          movies={results}
-          favorites={favorites}
-          onToggleFavorite={onToggleFavorite}
-        />
+        <MovieGrid movies={results} />
       )}
 
       {!loading && !error && submittedSearch.trim() && results.length === 0 && (

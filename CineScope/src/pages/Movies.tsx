@@ -3,12 +3,7 @@ import MovieGrid from "../components/MovieGrid";
 import { fetchPopularMovies } from "../services/tmdb";
 import type { Movie } from "../types/movie";
 
-interface MoviesProps {
-  favorites: number[];
-  onToggleFavorite: (movieId: number, movieTitle: string) => void;
-}
-
-function Movies({ favorites, onToggleFavorite }: MoviesProps) {
+function Movies() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -44,7 +39,7 @@ function Movies({ favorites, onToggleFavorite }: MoviesProps) {
       </section>
       {loading && <p role="status">Chargement des films...</p>}
       {error && <p role="alert">{error} Une erreur est survenue lors de la récupération des données. Veuillez réessayer.</p>}
-      {!loading && !error && <MovieGrid movies={movies} favorites={favorites} onToggleFavorite={onToggleFavorite} />}
+      {!loading && !error && <MovieGrid movies={movies} />}
       {!loading && !error && <div className="pagination">
         <button type="button" disabled={page === 1} onClick={() => setPage((current) => current - 1)}>Page précédente</button>
         <span>Page {page} sur {totalPages}</span>

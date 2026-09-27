@@ -3,12 +3,7 @@ import MovieGrid from "../components/MovieGrid";
 import { fetchPopularMovies } from "../services/tmdb";
 import type { Movie } from "../types/movie";
 
-interface HomeProps {
-  favorites: number[];
-  onToggleFavorite: (movieId: number, movieTitle: string) => void;
-}
-
-function Home({ favorites, onToggleFavorite }: HomeProps) {
+function Home() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState(false);
 
@@ -32,7 +27,7 @@ function Home({ favorites, onToggleFavorite }: HomeProps) {
         </section>
 
         {error && <p role="alert">Impossible de charger les films populaires.</p>}
-        {!error && movies.length > 0 && <MovieGrid movies={movies} favorites={favorites} onToggleFavorite={onToggleFavorite} />}
+        {!error && movies.length > 0 && <MovieGrid movies={movies} />}
       </section>
     </>
   );

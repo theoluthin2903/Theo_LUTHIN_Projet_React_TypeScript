@@ -3,13 +3,10 @@ import { Link } from "react-router-dom";
 import MovieGrid from "../components/MovieGrid";
 import { fetchMovieDetails } from "../services/tmdb";
 import type { Movie } from "../types/movie";
+import { useFavorites } from "../context/FavoritesContext";
 
-interface FavoritesProps {
-  favorites: number[];
-  onToggleFavorite: (movieId: number, movieTitle: string) => void;
-}
-
-function Favorites({ favorites, onToggleFavorite }: FavoritesProps) {
+function Favorites() {
+  const { favorites } = useFavorites();
   const [favoriteMovies, setFavoriteMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
@@ -37,11 +34,7 @@ function Favorites({ favorites, onToggleFavorite }: FavoritesProps) {
             </Link>
           </>
         ) : (
-          <MovieGrid
-            movies={favoriteMovies}
-            favorites={favorites}
-            onToggleFavorite={onToggleFavorite}
-          />
+          <MovieGrid movies={favoriteMovies} />
         )}
       </section>
     </>

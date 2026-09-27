@@ -5,11 +5,7 @@ import { fetchMovieDetails } from "../services/tmdb";
 import type { Movie as MovieType, WatchStatus } from "../types/movie";
 import { useLibrary } from "../context/LibraryContext";
 import { useAuth } from "../context/AuthContext";
-
-interface MovieProps {
-  favorites: number[];
-  onToggleFavorite: (movieId: number, movieTitle: string) => void;
-}
+import { useFavorites } from "../context/FavoritesContext";
 
 const getCountryName = (country: string): string => {
   if (!country) return country;
@@ -41,7 +37,7 @@ const getLanguageName = (language: string): string => {
   }
 };
 
-function Movie({ favorites, onToggleFavorite }: MovieProps) {
+function Movie() {
   const { id } = useParams<{ id: string }>();
   const [movie, setMovie] = useState<MovieType | null>(null);
   const [loading, setLoading] = useState(true);
@@ -50,6 +46,7 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
   const [ratingMessage, setRatingMessage] = useState("");
   const { library, addToLibrary, removeFromLibrary, updateStatus } = useLibrary();
   const { user } = useAuth();
+  const { isFavorite: checkIsFavorite, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     if (!id) return;
@@ -101,7 +98,7 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
     );
   }
 
-  const isFavorite = favorites.includes(movie.id);
+  const isFavorite = checkIsFavorite(movie.id);
   const libraryMovie = library.find((item) => item.id === movie.id);
   const isInLibrary = Boolean(libraryMovie);
 
@@ -180,7 +177,7 @@ function Movie({ favorites, onToggleFavorite }: MovieProps) {
             <button
               type="button"
               className="favorite-button"
-              onClick={() => onToggleFavorite(movie.id, movie.title)}
+              onClick={() => toggleFavorite(movie.id, movie.title)}
             >
               {isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
             </button>

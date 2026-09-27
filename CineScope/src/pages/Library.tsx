@@ -9,11 +9,6 @@ interface CategoryConfig {
   description: string;
 }
 
-interface LibraryPageProps {
-  favorites: number[];
-  onToggleFavorite: (movieId: number, movieTitle: string) => void;
-}
-
 const CATEGORIES: CategoryConfig[] = [
   {
     key: "to_watch",
@@ -32,10 +27,7 @@ const CATEGORIES: CategoryConfig[] = [
   },
 ];
 
-export const LibraryPage: React.FC<LibraryPageProps> = ({
-  favorites,
-  onToggleFavorite,
-}) => {
+export const LibraryPage: React.FC = () => {
   const { library } = useLibrary();
 
   return (
@@ -65,12 +57,7 @@ export const LibraryPage: React.FC<LibraryPageProps> = ({
               ) : (
                 <div className="movie-grid library-grid">
                   {movies.map((movie) => (
-                    <MovieCard
-                      key={movie.id}
-                      {...movie}
-                      isFavorite={favorites.includes(movie.id)}
-                      onToggleFavorite={onToggleFavorite}
-                    />
+                    <MovieCard key={movie.id} {...movie} />
                   ))}
                 </div>
               )}
