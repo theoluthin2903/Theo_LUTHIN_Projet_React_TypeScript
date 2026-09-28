@@ -2,11 +2,13 @@ import { Link } from "react-router-dom";
 import type { Movie, WatchStatus } from "../types/movie";
 import { useLibrary } from "../context/LibraryContext";
 import { useFavorites } from "../context/FavoritesContext";
+import { formatRating } from "../utils/formatRating";
+
 
 type MovieCardProps = Movie;
 
 export function MovieCard(props: MovieCardProps) {
-  const { id, title, genres, year, note, imagePath } = props;
+  const { id, title, genres, year, note, imagePath, voteCount } = props;
 
   const { library, addToLibrary, removeFromLibrary, updateStatus } = useLibrary();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -37,7 +39,7 @@ export function MovieCard(props: MovieCardProps) {
       <h2 className="movie-card__title">{title}</h2>
       {genres && <p>{genres.join(", ")}</p>}
       {year && <p>{year}</p>}
-      {note !== undefined && <p>Note moyenne : ⭐{note.toFixed(1)}/10</p>}
+      <p>{formatRating(note, voteCount)}</p>
 
       {/* Sélecteur de statut de la bibliothèque */}
       <div className="movie-card__library-status">

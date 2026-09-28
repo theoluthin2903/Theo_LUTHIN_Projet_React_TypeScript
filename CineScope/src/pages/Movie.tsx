@@ -6,6 +6,7 @@ import type { Movie as MovieType, WatchStatus } from "../types/movie";
 import { useLibrary } from "../context/LibraryContext";
 import { useAuth } from "../context/AuthContext";
 import { useFavorites } from "../context/FavoritesContext";
+import { formatRating } from "../utils/formatRating";
 
 const getCountryName = (country: string): string => {
   if (!country) return country;
@@ -170,7 +171,7 @@ function Movie() {
           <h1>{movie.title}</h1>
           {movie.realisateur.length > 0 && <p> De {movie.realisateur.join(" et ")} </p>}
           <p className="movie-detail__meta">
-            {movie.year || "Date inconnue"} • {movie.duree ? `${Math.trunc(movie.duree / 60)}h ${movie.duree % 60}min` : "Durée inconnue"} • ⭐ {movie.note.toFixed(1)}/10 • {movie.voteCount} votes
+            {movie.year || "Date inconnue"} • {movie.duree ? `${Math.trunc(movie.duree / 60)}h ${movie.duree % 60}min` : "Durée inconnue"} • <span>{formatRating(movie.note, movie.voteCount)}</span>
           </p>
 
           <div className="movie-detail__actions">
