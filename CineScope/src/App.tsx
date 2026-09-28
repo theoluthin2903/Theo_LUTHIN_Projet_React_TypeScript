@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Footer from "../components/Footer";
+import Footer from "./components/Footer";
 import Favorites from "./pages/Favorites";
 import Home from "./pages/Home";
 import Movies from "./pages/Movies";
