@@ -17,6 +17,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const USERS_KEY = "cinescope_users";
 const CURRENT_USER_KEY = "cinescope_current_user";
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserAccount | null>(() => {
@@ -54,8 +55,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const normalizedEmail = email.trim().toLowerCase();
     const normalizedUsername = username.trim();
 
+    if(EMAIL_REGEX.test(normalizedEmail) == false) {
+      return "L'adresse email ne respecte pas le format attendu(nom@domaine.fr)";
+    }
+
     if (!normalizedEmail || !normalizedUsername || !password) {
       return "Tous les champs sont obligatoires.";
+    }
+
+    if (password.length < 6) {
+      return "Le mot de passe doit faire 6 caractères minimum."
     }
 
     const users = getUsers();
@@ -67,6 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (users.some((item) => item.username.toLowerCase() === normalizedUsername.toLowerCase())) {
       return "Ce pseudonyme est déjà utilisé.";
     }
+    
 
     const newUser = {
       email: normalizedEmail,

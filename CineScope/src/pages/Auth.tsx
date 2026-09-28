@@ -132,7 +132,7 @@ function Auth() {
           )}
 
           <div className="auth-form__field">
-            <label htmlFor="auth-password">Mot de passe</label>
+            <label htmlFor="auth-password">Mot de passe(6 caractères minimum)</label>
             <div className="auth-password-wrapper">
               <input
                 id="auth-password"
